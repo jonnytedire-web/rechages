@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+
+  # Servicio 1: Base de Datos PostgreSQL
+
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: tullave_postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: tullave_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tullave_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  # Servicio 2: API REST Spring Boot
+
+  recharge-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tullave_recharge_api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/tullave_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+
+# Volúmenes Persistentes
+
+volumes:
+  postgres_data:
