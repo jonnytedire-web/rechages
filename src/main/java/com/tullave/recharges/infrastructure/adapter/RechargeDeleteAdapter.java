@@ -1,6 +1,7 @@
 package com.tullave.recharges.infrastructure.adapter;
 
 import com.tullave.recharges.domain.entities.Recharge;
+import com.tullave.recharges.domain.exceptions.RechargeNotFoundException;
 import com.tullave.recharges.domain.services.RechargeDeleteService;
 import com.tullave.recharges.repository.RechargeRepository;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,9 @@ public class RechargeDeleteAdapter implements RechargeDeleteService {
 
     @Override
     public boolean deleteRecharge(Long id) {
-        if (!rechargeRepository.existsById(id)) return false;
+        if (!rechargeRepository.existsById(id)) {
+            throw new RechargeNotFoundException(id);
+        }
         rechargeRepository.deleteById(id);
         return true;
     }
