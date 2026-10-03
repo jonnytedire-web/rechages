@@ -4,6 +4,8 @@ import com.tullave.recharges.domain.entities.Recharge;
 import com.tullave.recharges.domain.services.RechargeGetService;
 import com.tullave.recharges.repository.RechargeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class RechargeGetAdapter implements RechargeGetService {
 
 
     @Override
-    public List<Recharge> getAllRechrage() {
-        return rechargeRepository.findAll();
+    public Page<Recharge> getAllRechrage(Pageable pageable) {
+        return rechargeRepository.findAll(pageable);
     }
 }

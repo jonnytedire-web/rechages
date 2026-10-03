@@ -1,6 +1,10 @@
 spring:
   application:
     name: tullave-recharge-api
+  #security:
+    #user:
+     # name: admin
+    #  password: ClaveSegura123
 
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/tullave_db}

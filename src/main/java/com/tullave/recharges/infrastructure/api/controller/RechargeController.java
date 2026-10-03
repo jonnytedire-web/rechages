@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,17 +34,15 @@ public class RechargeController {
 
 
 
-    @Operation(summary = "Obtener todas las recargas registradas")
+    @Operation(summary = "Obtener recargas paginadas")
     @GetMapping("/getRecharges")
-    public ResponseEntity<List<RechargeDto>>getRechagesById(){
-        List<RechargeDto> rechager = rechargeGet.getRechageAll()
-                .stream()
-                .map(rechargeMapper::toDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<Page<RechargeDto>> getRecharges(Pageable pageable) {
+        Page<RechargeDto> page = rechargeGet
+                .getRechageAll(pageable)
+                .map(rechargeMapper::toDto);
 
-        return ResponseEntity.ok(rechager);
+        return ResponseEntity.ok(page);
     }
-
     @Operation(summary = "Crear una nueva recarga")
     @PostMapping("/recharges")
     public  ResponseEntity<RechargeDto> createRechage(@RequestBody RechargeDto rechargeDto){

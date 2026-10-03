@@ -30,9 +30,11 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        // Cualquier otra ruta requiere autenticación
+                        // authenticated
                         .anyRequest().authenticated()
                 )
+
+                //.httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
