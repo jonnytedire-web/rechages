@@ -4,9 +4,10 @@ import com.tullave.recharges.domain.entities.Recharge;
 import com.tullave.recharges.domain.services.RechargeSaveService;
 import com.tullave.recharges.repository.RechargeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
-
+@Component
 public class RechargeSaveAdapter implements RechargeSaveService {
     private final RechargeRepository rechargeRepository;
 
