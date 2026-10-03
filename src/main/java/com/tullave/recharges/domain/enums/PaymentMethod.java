@@ -1,6 +1,6 @@
 package com.tullave.recharges.domain.enums;
 
-public enum PymentMethod {
+public enum PaymentMethod {
     PSE,
     NEQUI,
     DAVIPLATA,

@@ -1,6 +1,6 @@
 package com.tullave.recharges.infrastructure.dto;
 
-import com.tullave.recharges.domain.enums.PymentMethod;
+import com.tullave.recharges.domain.enums.PaymentMethod;
 import lombok.Data;
 
 
@@ -15,6 +15,6 @@ public class RechargeDto {
     private String id;
     private String cardNumber;
     private BigDecimal amount;
-    private PymentMethod pymentMethod;
+    private PaymentMethod paymentMethod;
     private LocalDate createAt;
 }

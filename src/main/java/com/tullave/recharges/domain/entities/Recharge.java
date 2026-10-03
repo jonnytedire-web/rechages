@@ -1,14 +1,12 @@
 package com.tullave.recharges.domain.entities;
 
-import com.tullave.recharges.domain.enums.PymentMethod;
+import com.tullave.recharges.domain.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "recharges")
@@ -26,7 +24,7 @@ public class Recharge {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
-    private PymentMethod paymentMethod;
+    private PaymentMethod paymentMethod;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
