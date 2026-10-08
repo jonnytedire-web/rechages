@@ -5,6 +5,7 @@ import com.tullave.recharges.domain.enums.PaymentMethod;
 import com.tullave.recharges.domain.exceptions.InvalidRechargeAmountException;
 import com.tullave.recharges.infrastructure.adapter.RechargeSaveAdapter;
 import com.tullave.recharges.repository.RechargeRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,8 +18,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-
 
 @ExtendWith(MockitoExtension.class)
 class RechargeSaveTest {
@@ -29,27 +28,29 @@ class RechargeSaveTest {
     @InjectMocks
     private RechargeSaveAdapter rechargeSaveAdapter;
 
+    private Recharge recharge;
+
+    @BeforeEach
+    void setUp() {
+        recharge = new Recharge();
+        recharge.setCardNumber("1234567534567341");
+        recharge.setPaymentMethod(PaymentMethod.PSE);
+    }
 
     @Test
     void valid_amount() {
-
-        Recharge rechargeToSave = new Recharge();
-        rechargeToSave.setCardNumber("1234567534567341");
-        rechargeToSave.setAmount(new BigDecimal("10000"));
-        rechargeToSave.setPaymentMethod(PaymentMethod.PSE);
+        recharge.setAmount(new BigDecimal("10000"));
 
         Recharge savedRecharge = new Recharge();
         savedRecharge.setId(1L);
-        savedRecharge.setCardNumber(rechargeToSave.getCardNumber());
-        savedRecharge.setAmount(rechargeToSave.getAmount());
-        savedRecharge.setPaymentMethod(rechargeToSave.getPaymentMethod());
+        savedRecharge.setCardNumber(recharge.getCardNumber());
+        savedRecharge.setAmount(recharge.getAmount());
+        savedRecharge.setPaymentMethod(recharge.getPaymentMethod());
         savedRecharge.setCreatedAt(LocalDate.now());
 
         when(rechargeRepository.save(any(Recharge.class))).thenReturn(savedRecharge);
 
-
-        Recharge result = rechargeSaveAdapter.saveRecharge(rechargeToSave);
-
+        Recharge result = rechargeSaveAdapter.saveRecharge(recharge);
 
         assertNotNull(result);
         assertNotNull(result.getId());
@@ -59,37 +60,9 @@ class RechargeSaveTest {
         verify(rechargeRepository).save(any(Recharge.class));
     }
 
- @Test
-    void duffExcepcion(){
-
-     Recharge recharge = new Recharge();
-     recharge.setAmount(BigDecimal.ZERO);
-
-     assertThrows(InvalidRechargeAmountException.class,
-             () -> rechargeSaveAdapter.saveRecharge(recharge));
-
-     verify(rechargeRepository, never()).save(any());
-
- }
-
-
-
- @Test
-  void noNullExcepcion(){
-     Recharge recharge = new Recharge();
-     recharge.setAmount(BigDecimal.ZERO);
-
-     assertThrows(InvalidRechargeAmountException.class,
-             () -> rechargeSaveAdapter.saveRecharge(recharge));
-
-     verify(rechargeRepository, never()).save(any());
- }
-
-
     @Test
-    void NegativeExcepcion() {
-        Recharge recharge = new Recharge();
-        recharge.setAmount(new BigDecimal("-500"));
+    void zeroAmount_shouldThrowException() {
+        recharge.setAmount(BigDecimal.ZERO);
 
         assertThrows(InvalidRechargeAmountException.class,
                 () -> rechargeSaveAdapter.saveRecharge(recharge));
@@ -97,8 +70,23 @@ class RechargeSaveTest {
         verify(rechargeRepository, never()).save(any());
     }
 
+    @Test
+    void nullAmount_shouldThrowException() {
+        recharge.setAmount(null);
 
+        assertThrows(InvalidRechargeAmountException.class,
+                () -> rechargeSaveAdapter.saveRecharge(recharge));
 
+        verify(rechargeRepository, never()).save(any());
+    }
 
+    @Test
+    void negativeAmount_shouldThrowException() {
+        recharge.setAmount(new BigDecimal("-500"));
 
+        assertThrows(InvalidRechargeAmountException.class,
+                () -> rechargeSaveAdapter.saveRecharge(recharge));
+
+        verify(rechargeRepository, never()).save(any());
+    }
 }
