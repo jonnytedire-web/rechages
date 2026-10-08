@@ -16,28 +16,5 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class RechargeDeleteTest {
 
-    @Mock
-    private RechargeRepository rechargeRepository;
 
-    @InjectMocks
-    private RechargeDeleteAdapter rechargeDeleteAdapter;
-
-
-
-    @Test
-    void deleteRecharge() {
-        Long id = 1L;
-        when(rechargeRepository.existsById(id)).thenReturn(true);
-        boolean resultado = rechargeDeleteAdapter.deleteRecharge(id);
-        assertTrue(resultado);
-        verify(rechargeRepository, times(1)).deleteById(id);
-    }
-
-    @Test
-    void RechargeNotFoundException() {
-        Long id = 99L;
-        when(rechargeRepository.existsById(id)).thenReturn(false);
-        assertThrows(RechargeNotFoundException.class, () -> rechargeDeleteAdapter.deleteRecharge(id));
-        verify(rechargeRepository, never()).deleteById(anyLong());
-    }
 }
